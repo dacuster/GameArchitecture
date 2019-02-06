@@ -1,10 +1,11 @@
-/**********************************************************************
-**		Author: Nick DaCosta										 **
-**		Class: 310 <Section 01>										 **
-**		Assignment: pa 2											 **
-**		Certification of Authenticity:								 **
-**		I certify that this assignment is entirely my own work.	     **
-**********************************************************************/
+/*********************************************************************
+**		Author:														**
+**		Class: 310 <Section 0>										**
+**		Assignment: pa 2											**
+**		Certification of Authenticity:								**
+**		I certify that this assignment is entirely my own work.	    **
+**		Assingment 2 Author: Nick DaCosta							**
+*********************************************************************/
 #include <iostream>
 #include <cassert>
 #include <cstdlib>
@@ -43,20 +44,29 @@ const std::string BACK_BUFFER_FILENMAE  = "backbuffer.jpg";
 const std::string SMURF_SPRITE_FILENAME = "smurf_sprites.png";
 const std::string STEPS_BITMAP_FILENAME = "steps.png";
 const std::string FONT_FILENAME         = "cour.ttf";
-const std::string SMURF_MESSAGE         = "Curse you Papa Smurf!";
 
-const int FONT_SIZE                = 40;
+// Printed text.
+const std::string SMURF_MESSAGE = "Curse you Papa Smurf!";
+
+// Font size.
+const int FONT_SIZE = 40;
+
+// Spritesheet row and column counts.
 const int SPRITESHEET_ROW_COUNT    = 4;
 const int SPRITESHEET_COLUMN_COUNT = 4;
 
+// Write text coordinates.
 const float TEXT_X = 50;
 const float TEXT_Y = 50;
 
+// Scaling for the steps.
 const float STEPS_BITMAP_SCALE = 0.33f;
 
+// Text and background colors.
 const Color RED_COLOR   = Color(255, 0, 0);
 const Color BLACK_COLOR = Color(0,   0, 0);
 
+// Sleep time in seconds.
 const double SLEEP_TIME = 5.0;
 
 
@@ -111,6 +121,7 @@ int main()
 	// Draw the red buffer.
 	graphicsSystem.draw(redBuffer);
 
+	// TODO: Include target buffer to draw to. Don't draw directly to back buffer.
 	// Draw the steps buffer on the red buffer scaled by 1/3.
 	graphicsSystem.draw(stepsBuffer, STEPS_BITMAP_SCALE);
 
@@ -123,7 +134,7 @@ int main()
 	// Calculate the sprite height.
 	int spriteHeight = smurfsBuffer.getHeight() / SPRITESHEET_ROW_COUNT;
 
-	// Create a separate sprite for each one on the sheet.
+	// Create a separate sprite for each one on the sheet and add it to an array.
 	for (int spriteRow = 0; spriteRow < SPRITESHEET_COLUMN_COUNT; spriteRow++)
 	{
 		for (int spriteColumn = 0; spriteColumn < SPRITESHEET_COLUMN_COUNT; spriteColumn++)
@@ -135,9 +146,12 @@ int main()
 	// Randomly draw each sprite on the buffer.
 	for (int currentSprite = 0; currentSprite < SPRITESHEET_COLUMN_COUNT * SPRITESHEET_ROW_COUNT; currentSprite++)
 	{
+		// Calculate a random horizontal point within the buffer.
 		float destinationX = rand() % (graphicsSystem.getWidth() - spriteWidth) + 1;
+		// Calculate a vertical point within the buffer.
 		float destinationY = rand() % (graphicsSystem.getHeight() - spriteHeight) + 1;
 
+		// Draw the sprite on the buffer.
 		graphicsSystem.draw(smurfSprites[currentSprite], destinationX, destinationY);
 	}
 
@@ -163,6 +177,8 @@ int main()
 	// Stop tracking waiting.
 	pPerformanceTracker->stopTracking(WAIT_TRACKER_NAME);
 
+	// TODO: Move the GraphicsSystem destructor.
+	// NOTE: Not working from destructor because graphicsSystem doesn't go out of scope. Change graphicsSystem to a pointer?
 	// Clean up the system.
 	graphicsSystem.cleanUp();
 

@@ -1,10 +1,11 @@
-/**********************************************************************
-**		Author: Nick DaCosta										 **
-**		Class: 310 <Section 01>										 **
-**		Assignment: pa 2											 **
-**		Certification of Authenticity:								 **
-**		I certify that this assignment is entirely my own work.	     **
-**********************************************************************/
+/*********************************************************************
+**		Author:														**
+**		Class: 310 <Section 0>										**
+**		Assignment: pa 2											**
+**		Certification of Authenticity:								**
+**		I certify that this assignment is entirely my own work.	    **
+**		Assingment 2 Author: Nick DaCosta							**
+*********************************************************************/
 #include "GraphicsBuffer.h"
 
 // Basic buffer constructor.
@@ -73,6 +74,8 @@ GraphicsBuffer::GraphicsBuffer(int _width, int _height, Color _color)
 // Clean up the instance of the buffer.
 GraphicsBuffer::~GraphicsBuffer()
 {
+	// Check if the pointer belongs to this object.
+	// Not owned pointers will throw off the actual owner and break the code.
 	if (mOwnsBitmap)
 	{
 		al_destroy_bitmap(mpBitmap);

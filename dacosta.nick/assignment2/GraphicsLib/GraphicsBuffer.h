@@ -1,10 +1,11 @@
-/**********************************************************************
-**		Author: Nick DaCosta										 **
-**		Class: 310 <Section 01>										 **
-**		Assignment: pa 2											 **
-**		Certification of Authenticity:								 **
-**		I certify that this assignment is entirely my own work.	     **
-**********************************************************************/
+/*********************************************************************
+**		Author:														**
+**		Class: 310 <Section 0>										**
+**		Assignment: pa 2											**
+**		Certification of Authenticity:								**
+**		I certify that this assignment is entirely my own work.	    **
+**		Assingment 2 Author: Nick DaCosta							**
+*********************************************************************/
 #pragma once
 
 #include <allegro5/allegro.h>
@@ -48,12 +49,13 @@ public:
 	// Get the width of the buffer.
 	int getWidth();
 
+	// Allow GraphicsSystem to use private members.
 	friend class GraphicsSystem;
 
 private:
 	// Allegro bitmap.
 	ALLEGRO_BITMAP* mpBitmap = nullptr;
 
-	// Check if this class owns the bitmap pointer or not.
+	// Does this object own the bitmap.
 	bool mOwnsBitmap = false;
 };

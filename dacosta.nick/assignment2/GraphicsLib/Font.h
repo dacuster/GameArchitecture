@@ -1,12 +1,14 @@
-/**********************************************************************
-**		Author: Nick DaCosta										 **
-**		Class: 310 <Section 01>										 **
-**		Assignment: pa 2											 **
-**		Certification of Authenticity:								 **
-**		I certify that this assignment is entirely my own work.	     **
-**********************************************************************/
+/*********************************************************************
+**		Author:														**
+**		Class: 310 <Section 0>										**
+**		Assignment: pa 2											**
+**		Certification of Authenticity:								**
+**		I certify that this assignment is entirely my own work.	    **
+**		Assingment 2 Author: Nick DaCosta							**
+*********************************************************************/
 #pragma once
 
+// TODO: Remove allegro libraries when leaky abstraction is fixed.
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
@@ -36,7 +38,8 @@ public:
 	// Get the font size.
 	int getSize();
 	
-
+	// TODO: Leaky abstraction. Don't return anything allegro.
+	// Get the font.
 	const ALLEGRO_FONT* getFont() const;
 
 private:

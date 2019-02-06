@@ -1,10 +1,11 @@
-/**********************************************************************
-**		Author: Nick DaCosta										 **
-**		Class: 310 <Section 01>										 **
-**		Assignment: pa 2											 **
-**		Certification of Authenticity:								 **
-**		I certify that this assignment is entirely my own work.	     **
-**********************************************************************/
+/*********************************************************************
+**		Author:														**
+**		Class: 310 <Section 0>										**
+**		Assignment: pa 2											**
+**		Certification of Authenticity:								**
+**		I certify that this assignment is entirely my own work.	    **
+**		Assingment 2 Author: Nick DaCosta							**
+*********************************************************************/
 #include "Font.h"
 
 // Load a font with a specified size from a file.
@@ -63,6 +64,7 @@ int Font::getSize()
 	return mSize;
 }
 
+// TODO: Leaky abstraction. Don't return anything allegro.
 // Get the font.
 const ALLEGRO_FONT* Font::getFont() const
 {

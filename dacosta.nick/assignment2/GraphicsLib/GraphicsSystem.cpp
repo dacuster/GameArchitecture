@@ -1,19 +1,24 @@
-/**********************************************************************
-**		Author: Nick DaCosta										 **
-**		Class: 310 <Section 01>										 **
-**		Assignment: pa 2											 **
-**		Certification of Authenticity:								 **
-**		I certify that this assignment is entirely my own work.	     **
-**********************************************************************/
+/*********************************************************************
+**		Author:														**
+**		Class: 310 <Section 0>										**
+**		Assignment: pa 2											**
+**		Certification of Authenticity:								**
+**		I certify that this assignment is entirely my own work.	    **
+**		Assingment 2 Author: Nick DaCosta							**
+*********************************************************************/
 #include "GraphicsSystem.h"
 
+// Default constructor.
 GraphicsSystem::GraphicsSystem()
 {
 	return;
 }
 
+// Destructor.
 GraphicsSystem::~GraphicsSystem()
 {
+	// TODO: Call cleanup here.
+	// NOTE: Not working because object doesn't go out of scope. Change object to a pointer?
 	return;
 }
 
@@ -48,6 +53,8 @@ void GraphicsSystem::initialize(int _width, int _height)
 	return;
 }
 
+// TODO: Call from destructor.
+// NOTE: Not working from destructor because object doesn't go out of scope. Change object to a pointer?
 // Clean up the allegro display pointer.
 void GraphicsSystem::cleanUp()
 {
@@ -84,7 +91,8 @@ void GraphicsSystem::draw(Sprite _sprite, float _destinationX, float _destinatio
 	return;
 }
 
-// Draw a buffer to the back buffer in the center of the back buffer.
+// TODO: Include target buffer to draw to. Don't draw directly to back buffer.
+// Draw a centered buffer in the taget buffer.
 void GraphicsSystem::draw(GraphicsBuffer& _drawBuffer, float _scale)
 {
 	// Get the width of the buffer to draw.
@@ -116,7 +124,8 @@ void GraphicsSystem::writeText(float _destinationX, float _destinationY, Font& _
 {
 	// Create an allegro color.
 	ALLEGRO_COLOR drawColor = al_map_rgb(_color.getR(), _color.getG(), _color.getB());
-
+	
+	// TODO: Leaky abstraction. Don't get allegro font (getFont()).
 	// Draw text to the current buffer.
 	al_draw_text(_font.getFont(), drawColor, _destinationX, _destinationY, 0, _text.c_str());
 	return;

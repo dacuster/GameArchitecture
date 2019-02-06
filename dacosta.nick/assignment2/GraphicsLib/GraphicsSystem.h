@@ -1,12 +1,14 @@
-/**********************************************************************
-**		Author: Nick DaCosta										 **
-**		Class: 310 <Section 01>										 **
-**		Assignment: pa 2											 **
-**		Certification of Authenticity:								 **
-**		I certify that this assignment is entirely my own work.	     **
-**********************************************************************/
+/*********************************************************************
+**		Author:														**
+**		Class: 310 <Section 0>										**
+**		Assignment: pa 2											**
+**		Certification of Authenticity:								**
+**		I certify that this assignment is entirely my own work.	    **
+**		Assingment 2 Author: Nick DaCosta							**
+*********************************************************************/
 #pragma once
 
+// TODO: Add all allegro libraries here. Only call them here and GraphicsBuffer.
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_font.h>
@@ -30,43 +32,48 @@ public:
 	// Create default graphics system.
 	GraphicsSystem();
 
+	// TODO: Call cleanup here.
+	// NOTE: Not working because object doesn't go out of scope. Change object to a pointer?
 	// Destroy the display pointer.
 	~GraphicsSystem();
 
-	// TODO: GraphicsSystem initialize (don't call from constructor).
+	// GraphicsSystem initialize (don't call from constructor).
 	void initialize(int _width, int _height);
-
-	// TODO: Clean up the allegro system.
+	
+	// TODO: Call from destructor.
+	// NOTE: Not working from destructor because object doesn't go out of scope. Change object to a pointer?
+	// Clean up the allegro system.
 	void cleanUp();
 
-	// TODO: Get the width of the display.
+	// Get the width of the display.
 	int getWidth();
 
-	// TODO: Get the height of the display.
+	// Get the height of the display.
 	int getHeight();
 
-	// TODO: Bring the back buffer to the main buffer.
+	// Bring the back buffer to the main buffer.
 	void updateDisplay();
 
-	// TODO: Draw sprites.
+	// Draw sprites.
 	static void draw(Sprite _sprite, float _destinationX, float _destinationY, float _scale = 1.0);
-
-	// TODO: Draw to back buffer.
+	
+	// TODO: Include target buffer to draw to. Don't draw directly to back buffer.
+	// Draw a centered buffer in the taget buffer.
 	static void draw(GraphicsBuffer& _buffer, float _scale = 1.0f);
 
-	// TODO: Write text to the current back buffer.
+	// Write text to the current back buffer.
 	static void writeText(float _destinationX, float _destinationY, Font& _font, Color _color, std::string _text);
 
-	// TODO: Write text to the given buffer.
+	// Write text to the given buffer.
 	static void writeText(GraphicsBuffer& _buffer, float _destinationX, float _destinationY, Font& _font, Color _color, std::string _text);
 
-	// TODO: Save the buffer as a jpg.
+	// Save the buffer as a jpg.
 	static void saveBuffer(GraphicsBuffer& _buffer, std::string _fileName);
 
-	// TODO: Get the back buffer of the display.
+	// Get the back buffer of the display.
 	GraphicsBuffer getBackBuffer();
 
 private:
-	// TODO: GraphicsSystem member variable allegro display.
+	// Member variable allegro display.
 	ALLEGRO_DISPLAY* mpDisplay;
 };
