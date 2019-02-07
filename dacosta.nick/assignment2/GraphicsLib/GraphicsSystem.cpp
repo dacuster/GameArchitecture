@@ -58,8 +58,12 @@ void GraphicsSystem::initialize(int _width, int _height)
 // Clean up the allegro display pointer.
 void GraphicsSystem::cleanUp()
 {
-	// Destroy the Allegro display pointer.
-	al_destroy_display(mpDisplay);
+	// TODO: Check null pointer before double cleanup.
+	if (!mpDisplay)
+	{
+		// Destroy the Allegro display pointer.
+		al_destroy_display(mpDisplay);
+	}
 	
 	return;
 }

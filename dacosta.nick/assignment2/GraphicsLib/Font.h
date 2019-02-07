@@ -26,6 +26,9 @@ class Font :
 	public Trackable
 {
 public:
+	//TODO: Friend GraphicsSystem class
+	//friend GraphicsSystem;
+
 	// Load a font with a specified size from a file.
 	Font(std::string _readPath, std::string _fileName, int _size);
 
@@ -38,7 +41,7 @@ public:
 	// Get the font size.
 	int getSize();
 	
-	// TODO: Leaky abstraction. Don't return anything allegro.
+	// TODO: Leaky abstraction. Don't return anything allegro in public.
 	// Get the font.
 	const ALLEGRO_FONT* getFont() const;
 

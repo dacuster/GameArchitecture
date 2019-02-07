@@ -76,4 +76,7 @@ public:
 private:
 	// Member variable allegro display.
 	ALLEGRO_DISPLAY* mpDisplay;
+
+	//TODO: Set the back buffer here.
+	GraphicsBuffer* mpBackBuffer;
 };

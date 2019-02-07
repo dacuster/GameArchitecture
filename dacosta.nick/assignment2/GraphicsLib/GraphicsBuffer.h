@@ -58,4 +58,6 @@ private:
 
 	// Does this object own the bitmap.
 	bool mOwnsBitmap = false;
+
+	// TODO: Invalidate copy constructor and assignment operator=
 };

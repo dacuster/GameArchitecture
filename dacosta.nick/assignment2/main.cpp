@@ -100,18 +100,29 @@ int main()
 	// Start tracking drawing.
 	pPerformanceTracker->startTracking(DRAW_TRACKER_NAME);
 
+	// TODO: Change to pointer.
 	// Create steps graphics buffer.
 	GraphicsBuffer stepsBuffer = GraphicsBuffer(ASSET_PATH, STEPS_BITMAP_FILENAME);
 
+	// TODO: Change to pointer.
 	// Create smurfs graphics buffer.
 	GraphicsBuffer smurfsBuffer = GraphicsBuffer(ASSET_PATH, SMURF_SPRITE_FILENAME);
 
+	// TODO: Change to pointer.
 	// Create red graphics buffer.
 	GraphicsBuffer redBuffer = GraphicsBuffer(DISPLAY_WIDTH, DISPLAY_HEIGHT, RED_COLOR);
 
+	// TODO: assert buffers. Assertions check it gets made. Don't use in build.
+	// Assert doesn't work in builds. No function calls.
+	// assert(stepsBuffer && smurfsBuffer && redBuffer);
+
+	// TODO: setBufferToColor(*pRedBuffer, RED);
+
+	// TODO: Change to pointer.
 	// Create a new font.
 	Font courrierFont = Font(ASSET_PATH, FONT_FILENAME, FONT_SIZE);
 	
+	// TODO: Pass in pointer buffer. *redBuffer
 	// Draw text to the red buffer in black "Curse you Papa Smurf!".
 	graphicsSystem.writeText(redBuffer, TEXT_X, TEXT_Y, courrierFont, BLACK_COLOR, SMURF_MESSAGE);
 
@@ -155,6 +166,7 @@ int main()
 		graphicsSystem.draw(smurfSprites[currentSprite], destinationX, destinationY);
 	}
 
+	// TODO: Change to pointer buffer.
 	// Save the back buffer to backbuffer.jpg.
 	graphicsSystem.saveBuffer(graphicsSystem.getBackBuffer(), BACK_BUFFER_FILENMAE);
 
