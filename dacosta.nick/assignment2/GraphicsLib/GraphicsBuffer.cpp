@@ -87,7 +87,7 @@ void GraphicsBuffer::initialize()
 	{
 		std::cout << "Error initializing Allegro image addon!" << std::endl;
 		return;
-	}
+	}	
 
 	return;
 }

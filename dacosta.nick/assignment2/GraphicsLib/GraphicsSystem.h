@@ -8,7 +8,6 @@
 *********************************************************************/
 #pragma once
 
-// TODO: Add all allegro libraries here. Only call them here and GraphicsBuffer.
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_font.h>
@@ -61,10 +60,10 @@ public:
 	static void draw(GraphicsBuffer& _drawBuffer, int _justification = BUFFER_TOP_LEFT, float _scale = 1.0f);
 
 	// Write text to the current back buffer.
-	static void writeText(float _destinationX, float _destinationY, Font& _font, Color _color, std::string _text);
+	static void writeText(float _destinationX, float _destinationY, Font& _font, Color _color, std::string _text, int _flag = FONT_ALIGN_LEFT);
 
 	// Write text to the given buffer.
-	static void writeText(GraphicsBuffer& _buffer, float _destinationX, float _destinationY, Font& _font, Color _color, std::string _text);
+	static void writeText(GraphicsBuffer& _buffer, float _destinationX, float _destinationY, Font& _font, Color _color, std::string _text, int _flag = FONT_ALIGN_LEFT);
 
 	// Save a buffer.
 	static void saveBuffer(GraphicsBuffer& _buffer, std::string _fileName);
@@ -82,8 +81,11 @@ private:
 	// Member variable allegro display.
 	ALLEGRO_DISPLAY* mpDisplay = nullptr;
 
-	//Member variable to store a back buffer.
+	// Member variable to store a back buffer.
 	GraphicsBuffer* mpBackBuffer = nullptr;
+
+	// Member variable check for initialization.
+	bool mIsInitialized = false;
 
 	// Set the back buffer of the display.
 	void setBackBuffer();

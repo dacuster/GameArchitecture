@@ -68,6 +68,8 @@ const Color BLACK_COLOR = Color(0,   0, 0);
 
 // Sleep time in seconds.
 const double SLEEP_TIME = 5.0;
+// Multiplier to change from seconds to milliseconds.
+const double SECOND_TO_MILLISECOND = 1000.0;
 
 
 int main()
@@ -177,15 +179,10 @@ int main()
 	*******************/
 	Timer* pTimer = new Timer;
 	pTimer->start();
-	pTimer->sleepUntilElapsed(SLEEP_TIME*1000.0);
+	pTimer->sleepUntilElapsed(SLEEP_TIME * SECOND_TO_MILLISECOND);
 
 	// Stop tracking waiting.
 	pPerformanceTracker->stopTracking(WAIT_TRACKER_NAME);
-
-	// TODO: Move the GraphicsSystem destructor.
-	// NOTE: Not working from destructor because graphicsSystem doesn't go out of scope. Change graphicsSystem to a pointer?
-	// Clean up the system.
-	pGraphicsSystem->cleanUp();
 
 	/****************************
 		Report elapsed times.

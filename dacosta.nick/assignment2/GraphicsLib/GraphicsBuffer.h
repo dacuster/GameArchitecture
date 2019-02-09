@@ -18,15 +18,16 @@
 #include "Color.h"
 
 // Define buffer drawing flags.
-constexpr auto BUFFER_TOP_LEFT     = 0; 
-constexpr auto BUFFER_TOP          = 1; 
-constexpr auto BUFFER_TOP_RIGHT    = 2; 
-constexpr auto BUFFER_CENTER_LEFT  = 3; 
-constexpr auto BUFFER_CENTER       = 4; 
-constexpr auto BUFFER_CENTER_RIGHT = 5; 
-constexpr auto BUFFER_BOTTOM_LEFT  = 6; 
-constexpr auto BUFFER_BOTTOM       = 7; 
-constexpr auto BUFFER_BOTTOM_RIGHT = 8; 
+constexpr auto BUFFER_DEFAULT      = 0;
+constexpr auto BUFFER_TOP_LEFT     = 0;
+constexpr auto BUFFER_TOP          = 1;
+constexpr auto BUFFER_TOP_RIGHT    = 2;
+constexpr auto BUFFER_CENTER_LEFT  = 3;
+constexpr auto BUFFER_CENTER       = 4;
+constexpr auto BUFFER_CENTER_RIGHT = 5;
+constexpr auto BUFFER_BOTTOM_LEFT  = 6;
+constexpr auto BUFFER_BOTTOM       = 7;
+constexpr auto BUFFER_BOTTOM_RIGHT = 8;
 
 /// <summary>
 ///		Holds a chunk of memory to display something.

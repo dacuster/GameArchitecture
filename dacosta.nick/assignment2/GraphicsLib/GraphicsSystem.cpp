@@ -25,25 +25,37 @@ GraphicsSystem::~GraphicsSystem()
 // Initialize a display.
 void GraphicsSystem::initialize(int _width, int _height)
 {
-	// Initialize Allegro.
-	if (!al_init())
+	// Check for prior initialization.
+	if (!mIsInitialized)
 	{
-		std::cout << "Error initializing Allegro!" << std::endl;
-		return;
-	}
+		// Initialize Allegro.
+		if (!al_init())
+		{
+			std::cout << "Error initializing Allegro!" << std::endl;
+			return;
+		}
 
-	// Initialize Allegro ttf addon.
-	if (!al_init_ttf_addon())
-	{
-		std::cout << "Error initializing Allegro ttf addon!" << std::endl;
-		return;
-	}
+		// Initialize Allegro ttf addon.
+		if (!al_init_ttf_addon())
+		{
+			std::cout << "Error initializing Allegro ttf addon!" << std::endl;
+			return;
+		}
 
-	// Initialize Allegro font addon.
-	if (!al_init_font_addon())
+		// Initialize Allegro font addon.
+		if (!al_init_font_addon())
+		{
+			std::cout << "Error initializing Allegro font addon!" << std::endl;
+			return;
+		}
+
+		// We have just initialized.
+		mIsInitialized = true;
+	}
+	else
 	{
-		std::cout << "Error initializing Allegro font addon!" << std::endl;
-		return;
+		// Clean the old display.
+		cleanUp();
 	}
 
 	// Create a new display with the given dimensions.
@@ -58,7 +70,7 @@ void GraphicsSystem::initialize(int _width, int _height)
 void GraphicsSystem::cleanUp()
 {
 	// Check for null pointer before double cleanup.
-	if (mpDisplay)
+	if (mpDisplay != nullptr)
 	{
 		// Destroy the Allegro display pointer.
 		al_destroy_display(mpDisplay);
@@ -160,16 +172,15 @@ void GraphicsSystem::draw(GraphicsBuffer& _drawBuffer, int _flag /* = BUFFER_TOP
 }
 
 // Write text to the current buffer.
-void GraphicsSystem::writeText(float _destinationX, float _destinationY, Font& _font, Color _color, std::string _text)
+void GraphicsSystem::writeText(float _destinationX, float _destinationY, Font& _font, Color _color, std::string _text, int _flag /* = FONT_ALIGN_LEFT */)
 {
-	// TODO: Text justification flags.
 	// Draw text to the current buffer.
-	al_draw_text(_font.mpFont, getColor(_color), _destinationX, _destinationY, 0, _text.c_str());
+	al_draw_text(_font.mpFont, getColor(_color), _destinationX, _destinationY, _flag, _text.c_str());
 	return;
 }
 
 // Write text to the given buffer.
-void GraphicsSystem::writeText(GraphicsBuffer& _buffer, float _destinationX, float _destinationY, Font& _font, Color _color, std::string _text)
+void GraphicsSystem::writeText(GraphicsBuffer& _buffer, float _destinationX, float _destinationY, Font& _font, Color _color, std::string _text, int _flag /* = FONT_ALIGN_LEFT */)
 {
 	// Store the current back buffer.
 	ALLEGRO_BITMAP* pBackBuffer = al_get_target_bitmap();
@@ -177,9 +188,8 @@ void GraphicsSystem::writeText(GraphicsBuffer& _buffer, float _destinationX, flo
 	// Set the target drawing buffer.
 	al_set_target_bitmap(_buffer.mpBitmap);
 	
-	// TODO: Text justification flags.
 	// Draw the text to the buffer.
-	al_draw_text(_font.mpFont, getColor(_color), _destinationX, _destinationY, 0, _text.c_str());
+	al_draw_text(_font.mpFont, getColor(_color), _destinationX, _destinationY, _flag, _text.c_str());
 
 	// Restore the back buffer.
 	al_set_target_bitmap(pBackBuffer);

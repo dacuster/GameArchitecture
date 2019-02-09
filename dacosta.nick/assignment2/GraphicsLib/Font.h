@@ -8,7 +8,6 @@
 *********************************************************************/
 #pragma once
 
-// TODO: Remove allegro libraries when leaky abstraction is fixed.
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
@@ -20,9 +19,10 @@
 class GraphicsSystem;
 
 // Define font flags.
-constexpr auto FONT_DEFAULT = 0;
-constexpr auto FONT_NO_KERNING = 1;
-constexpr auto FONT_MONOCHROME = 2;
+constexpr auto FONT_DEFAULT      = 0; 
+constexpr auto FONT_ALIGN_LEFT   = 0; 
+constexpr auto FONT_ALIGN_CENTER = 1; 
+constexpr auto FONT_ALIGN_RIGHT  = 2; 
 
 
 
