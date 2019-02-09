@@ -17,6 +17,15 @@
 
 #include "Trackable.h"
 
+class GraphicsSystem;
+
+// Define font flags.
+constexpr auto FONT_DEFAULT = 0;
+constexpr auto FONT_NO_KERNING = 1;
+constexpr auto FONT_MONOCHROME = 2;
+
+
+
 /// <summary>
 /// 
 /// </summary>
@@ -26,8 +35,7 @@ class Font :
 	public Trackable
 {
 public:
-	//TODO: Friend GraphicsSystem class
-	//friend GraphicsSystem;
+	friend GraphicsSystem;
 
 	// Load a font with a specified size from a file.
 	Font(std::string _readPath, std::string _fileName, int _size);
@@ -40,10 +48,6 @@ public:
 
 	// Get the font size.
 	int getSize();
-	
-	// TODO: Leaky abstraction. Don't return anything allegro in public.
-	// Get the font.
-	const ALLEGRO_FONT* getFont() const;
 
 private:
 	// Allegro font.

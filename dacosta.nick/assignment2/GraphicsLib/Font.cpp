@@ -63,10 +63,3 @@ int Font::getSize()
 {
 	return mSize;
 }
-
-// TODO: Leaky abstraction. Don't return anything allegro.
-// Get the font.
-const ALLEGRO_FONT* Font::getFont() const
-{
-	return mpFont;
-}

@@ -17,8 +17,8 @@ GraphicsSystem::GraphicsSystem()
 // Destructor.
 GraphicsSystem::~GraphicsSystem()
 {
-	// TODO: Call cleanup here.
-	// NOTE: Not working because object doesn't go out of scope. Change object to a pointer?
+	// Clean up the system.
+	cleanUp();
 	return;
 }
 
@@ -53,17 +53,18 @@ void GraphicsSystem::initialize(int _width, int _height)
 	return;
 }
 
-// TODO: Call from destructor.
-// NOTE: Not working from destructor because object doesn't go out of scope. Change object to a pointer?
-// Clean up the allegro display pointer.
+// TODO: Check Dean's email response about this.
+// Clean up the object.
 void GraphicsSystem::cleanUp()
 {
-	// TODO: Check null pointer before double cleanup.
-	if (!mpDisplay)
+	// Check for null pointer before double cleanup.
+	if (mpDisplay)
 	{
 		// Destroy the Allegro display pointer.
 		al_destroy_display(mpDisplay);
 	}
+
+	mpDisplay = nullptr;
 	
 	return;
 }
@@ -95,30 +96,65 @@ void GraphicsSystem::draw(Sprite _sprite, float _destinationX, float _destinatio
 	return;
 }
 
-// TODO: Include target buffer to draw to. Don't draw directly to back buffer.
-// Draw a centered buffer in the taget buffer.
-void GraphicsSystem::draw(GraphicsBuffer& _drawBuffer, float _scale)
+// Draw a buffer to a target buffer.
+void GraphicsSystem::draw(GraphicsBuffer& _drawBuffer, GraphicsBuffer& _targetBuffer, int _flag /*  BUFFER_TOP_LEFT*/, float _scale /* = 1.0f*/)
 {
+	// Store the back buffer temporarily.
+	ALLEGRO_BITMAP* pBackBuffer = al_get_target_bitmap();
+
+	// Set the target buffer as the current buffer.
+	al_set_target_bitmap(_targetBuffer.mpBitmap);
+
 	// Get the width of the buffer to draw.
-	int drawBufferWidth = al_get_bitmap_width(_drawBuffer.mpBitmap);
+	int drawBufferWidth = _drawBuffer.getWidth();
 	// Get the height of the buffer to draw.
-	int drawBufferHeight = al_get_bitmap_height(_drawBuffer.mpBitmap);
+	int drawBufferHeight = _drawBuffer.getHeight();
 
 	// Set the scaled width of the buffer to draw.
 	float scaledWidth = drawBufferWidth * _scale;
 	// Set the scaled height of the buffer to draw.
 	float scaledHeight = drawBufferHeight * _scale;
 
-	// Get the back buffer for calculations.
-	ALLEGRO_BITMAP* pBackBuffer = al_get_target_bitmap();
+	// Draw location of the x position.
+	float destinationX = 0.0f;
+	// Draw location of the y position.
+	float destinationY = 0.0f;
 
-	// Set the drawing x coordinate for horizontal centering.
-	float destinationX = (al_get_bitmap_width(pBackBuffer) - scaledWidth) / 2;
-	// Set the drawing y coordinate for vertical centering.
-	float destinationY = (al_get_bitmap_height(pBackBuffer) - scaledHeight) / 2;
+	// Set the x and y draw position based on the flag.
+	setDrawPosition(destinationX, destinationY, scaledWidth, scaledHeight, _flag);
 
-	// Draw a scaled bitmap to the back buffer.
-	al_draw_scaled_bitmap(_drawBuffer.mpBitmap, 0, 0, drawBufferWidth, drawBufferHeight, destinationX, destinationY, scaledWidth, scaledHeight, 0);
+	// Draw a scaled bitmap to the target buffer.
+	al_draw_scaled_bitmap(_drawBuffer.mpBitmap, 0.0f, 0.0f, drawBufferWidth, drawBufferHeight, destinationX, destinationY, scaledWidth, scaledHeight, 0);
+
+	// Reset the back buffer.
+	al_set_target_bitmap(pBackBuffer);
+
+	return;
+}
+
+// Draw directly to the back buffer.
+void GraphicsSystem::draw(GraphicsBuffer& _drawBuffer, int _flag /* = BUFFER_TOP_LEFT */, float _scale /* = 1.0f */)
+{
+	// Get the width of the buffer to draw.
+	int drawBufferWidth = _drawBuffer.getWidth();
+	// Get the height of the buffer to draw.
+	int drawBufferHeight = _drawBuffer.getHeight();
+
+	// Set the scaled width of the buffer to draw.
+	float scaledWidth = drawBufferWidth * _scale;
+	// Set the scaled height of the buffer to draw.
+	float scaledHeight = drawBufferHeight * _scale;
+
+	// Draw location of the x position.
+	float destinationX = 0.0f;
+	// Draw location of the y position.
+	float destinationY = 0.0f;
+
+	// Set the x and y draw position based on the flag.
+	setDrawPosition(destinationX, destinationY, scaledWidth, scaledHeight, _flag);
+
+	// Draw a scaled bitmap to the target buffer.
+	al_draw_scaled_bitmap(_drawBuffer.mpBitmap, 0.0f, 0.0f, drawBufferWidth, drawBufferHeight, destinationX, destinationY, scaledWidth, scaledHeight, 0);
 
 	return;
 }
@@ -126,12 +162,9 @@ void GraphicsSystem::draw(GraphicsBuffer& _drawBuffer, float _scale)
 // Write text to the current buffer.
 void GraphicsSystem::writeText(float _destinationX, float _destinationY, Font& _font, Color _color, std::string _text)
 {
-	// Create an allegro color.
-	ALLEGRO_COLOR drawColor = al_map_rgb(_color.getR(), _color.getG(), _color.getB());
-	
-	// TODO: Leaky abstraction. Don't get allegro font (getFont()).
+	// TODO: Text justification flags.
 	// Draw text to the current buffer.
-	al_draw_text(_font.getFont(), drawColor, _destinationX, _destinationY, 0, _text.c_str());
+	al_draw_text(_font.mpFont, getColor(_color), _destinationX, _destinationY, 0, _text.c_str());
 	return;
 }
 
@@ -143,11 +176,10 @@ void GraphicsSystem::writeText(GraphicsBuffer& _buffer, float _destinationX, flo
 
 	// Set the target drawing buffer.
 	al_set_target_bitmap(_buffer.mpBitmap);
-
-	ALLEGRO_COLOR drawColor = al_map_rgb(_color.getR(), _color.getG(), _color.getB());
-
+	
+	// TODO: Text justification flags.
 	// Draw the text to the buffer.
-	al_draw_text(_font.getFont(), drawColor, _destinationX, _destinationY, 0, _text.c_str());
+	al_draw_text(_font.mpFont, getColor(_color), _destinationX, _destinationY, 0, _text.c_str());
 
 	// Restore the back buffer.
 	al_set_target_bitmap(pBackBuffer);
@@ -162,8 +194,114 @@ void GraphicsSystem::saveBuffer(GraphicsBuffer& _buffer, std::string _fileName)
 	return;
 }
 
+// Set the buffer as a color.
+void GraphicsSystem::setBufferColor(GraphicsBuffer& _buffer, Color _color)
+{
+	// Hold the old back buffer to reassign after drawing.
+	ALLEGRO_BITMAP* pOldBackBuffer = al_get_target_bitmap();
+
+	// Set the bitmap to draw on as the given bitmap.
+	al_set_target_bitmap(_buffer.mpBitmap);
+
+	// Make the entire bitmap a given color.
+	al_clear_to_color(getColor(_color));
+
+	// Reassign the old back buffer.
+	al_set_target_bitmap(pOldBackBuffer);
+
+	return;
+}
+
+// Set the drawing position based on the flag.
+void GraphicsSystem::setDrawPosition(float& _positionX, float& _positionY, float _drawWidth, float _drawHeight, int _flag)
+{
+	// Get the back buffer for calculations.
+	ALLEGRO_BITMAP* pBackBuffer = al_get_target_bitmap();
+
+	// Get the back buffer width.
+	int backBufferWidth = al_get_bitmap_width(pBackBuffer);
+	// Get the back buffer height.
+	int backBufferHeight = al_get_bitmap_height(pBackBuffer);
+
+	// Difference in width between the back buffer and the draw buffer.
+	float differenceWidth = backBufferWidth - _drawWidth;
+	// Difference in height between the back buffer and the draw buffer.
+	float differenceHeight = backBufferHeight - _drawHeight;
+
+	// Set the x and y position for drawing.
+	switch (_flag)
+	{
+		case BUFFER_TOP_LEFT:
+			_positionX = 0.0f;
+			_positionY = 0.0f;
+			break;
+
+		case BUFFER_TOP:
+			_positionX = differenceWidth / 2.0f;
+			_positionY = 0.0f;
+			break;
+
+		case BUFFER_TOP_RIGHT:
+			_positionX = differenceWidth;
+			_positionY = 0.0f;
+			break;
+
+		case BUFFER_CENTER_LEFT:
+			_positionX = 0.0f;
+			_positionY = differenceHeight / 2.0f;
+			break;
+
+		case BUFFER_CENTER:
+			_positionX = differenceWidth / 2.0f;
+			_positionY = differenceHeight / 2.0f;
+			break;
+
+		case BUFFER_CENTER_RIGHT:
+			_positionX = differenceWidth;
+			_positionY = differenceHeight / 2.0f;
+			break;
+
+		case BUFFER_BOTTOM_LEFT:
+			_positionX = 0.0f;
+			_positionY = differenceHeight;
+			break;
+
+		case BUFFER_BOTTOM:
+			_positionX = differenceWidth / 2.0f;
+			_positionY = differenceHeight;
+			break;
+
+		case BUFFER_BOTTOM_RIGHT:
+			_positionX = differenceWidth;
+			_positionY = differenceHeight;
+			break;
+	}
+
+	return;
+}
+
 // Get the back buffer.
 GraphicsBuffer GraphicsSystem::getBackBuffer()
 {
 	return GraphicsBuffer(al_get_target_bitmap());
+}
+
+// Store the current back buffer of the display.
+void GraphicsSystem::setBackBuffer()
+{
+	mpBackBuffer->mpBitmap = al_get_target_bitmap();
+	return;
+}
+
+// Set the buffer to draw on.
+void GraphicsSystem::setBackBuffer(GraphicsBuffer& _buffer)
+{
+	al_set_target_bitmap(_buffer.mpBitmap);
+	return;
+}
+
+// Get an Allegro color.
+ALLEGRO_COLOR GraphicsSystem::getColor(Color _color)
+{
+	return al_map_rgb(_color.getR(), _color.getG(), _color.getB());
 }

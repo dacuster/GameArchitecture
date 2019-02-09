@@ -17,6 +17,17 @@
 
 #include "Color.h"
 
+// Define buffer drawing flags.
+constexpr auto BUFFER_TOP_LEFT     = 0; 
+constexpr auto BUFFER_TOP          = 1; 
+constexpr auto BUFFER_TOP_RIGHT    = 2; 
+constexpr auto BUFFER_CENTER_LEFT  = 3; 
+constexpr auto BUFFER_CENTER       = 4; 
+constexpr auto BUFFER_CENTER_RIGHT = 5; 
+constexpr auto BUFFER_BOTTOM_LEFT  = 6; 
+constexpr auto BUFFER_BOTTOM       = 7; 
+constexpr auto BUFFER_BOTTOM_RIGHT = 8; 
+
 /// <summary>
 ///		Holds a chunk of memory to display something.
 /// </summary>
@@ -34,8 +45,8 @@ public:
 	// Load a buffer from a file.
 	GraphicsBuffer(std::string _readPath, std::string fileName);
 	
-	// Create a buffer with a given dimension and a color applied to it.
-	GraphicsBuffer(int _width, int _height, Color _color);
+	// Create a buffer with a given dimension.
+	GraphicsBuffer(int _width, int _height);
 
 	// Clean up the instance of the buffer.
 	~GraphicsBuffer();

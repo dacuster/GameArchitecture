@@ -32,16 +32,13 @@ public:
 	// Create default graphics system.
 	GraphicsSystem();
 
-	// TODO: Call cleanup here.
-	// NOTE: Not working because object doesn't go out of scope. Change object to a pointer?
 	// Destroy the display pointer.
 	~GraphicsSystem();
 
 	// GraphicsSystem initialize (don't call from constructor).
 	void initialize(int _width, int _height);
 	
-	// TODO: Call from destructor.
-	// NOTE: Not working from destructor because object doesn't go out of scope. Change object to a pointer?
+	// TODO: Check Dean's email response about this.
 	// Clean up the allegro system.
 	void cleanUp();
 
@@ -57,9 +54,11 @@ public:
 	// Draw sprites.
 	static void draw(Sprite _sprite, float _destinationX, float _destinationY, float _scale = 1.0);
 	
-	// TODO: Include target buffer to draw to. Don't draw directly to back buffer.
-	// Draw a centered buffer in the taget buffer.
-	static void draw(GraphicsBuffer& _buffer, float _scale = 1.0f);
+	// Draw a buffer to a target buffer.
+	static void draw(GraphicsBuffer& _drawBuffer, GraphicsBuffer& _targetBuffer, int _flag = BUFFER_TOP_LEFT, float _scale = 1.0f);
+
+	// Draw directly to the back buffer.
+	static void draw(GraphicsBuffer& _drawBuffer, int _justification = BUFFER_TOP_LEFT, float _scale = 1.0f);
 
 	// Write text to the current back buffer.
 	static void writeText(float _destinationX, float _destinationY, Font& _font, Color _color, std::string _text);
@@ -67,16 +66,31 @@ public:
 	// Write text to the given buffer.
 	static void writeText(GraphicsBuffer& _buffer, float _destinationX, float _destinationY, Font& _font, Color _color, std::string _text);
 
-	// Save the buffer as a jpg.
+	// Save a buffer.
 	static void saveBuffer(GraphicsBuffer& _buffer, std::string _fileName);
+
+	// Set the buffer as a color.
+	void setBufferColor(GraphicsBuffer& _buffer, Color _color);
+
+	// Set the drawing position based on the flag.
+	static void setDrawPosition(float& _positionX, float& _positionY, float _drawWidth, float _drawHeight, int _flag);
 
 	// Get the back buffer of the display.
 	GraphicsBuffer getBackBuffer();
 
 private:
 	// Member variable allegro display.
-	ALLEGRO_DISPLAY* mpDisplay;
+	ALLEGRO_DISPLAY* mpDisplay = nullptr;
 
-	//TODO: Set the back buffer here.
-	GraphicsBuffer* mpBackBuffer;
+	//Member variable to store a back buffer.
+	GraphicsBuffer* mpBackBuffer = nullptr;
+
+	// Set the back buffer of the display.
+	void setBackBuffer();
+
+	// Set the buffer to draw on.
+	void setBackBuffer(GraphicsBuffer& _buffer);
+
+	// Get an Allegro color.
+	static ALLEGRO_COLOR getColor(Color _color);
 };

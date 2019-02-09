@@ -43,14 +43,11 @@ GraphicsBuffer::GraphicsBuffer(std::string _readPath, std::string _fileName)
 	return;
 }
 
-// Create a buffer with a given dimension and a color applied to it.
-GraphicsBuffer::GraphicsBuffer(int _width, int _height, Color _color)
+// Create a buffer with a given dimension.
+GraphicsBuffer::GraphicsBuffer(int _width, int _height)
 {
 	// Initialize the required components.
 	initialize();
-
-	// Set the current bitmap to a temporary bitmap to reassign later.
-	ALLEGRO_BITMAP* tempBitmap = al_get_target_bitmap();
 
 	// Create a bitmap with given dimensions.
 	mpBitmap = al_create_bitmap(_width, _height);
@@ -58,15 +55,6 @@ GraphicsBuffer::GraphicsBuffer(int _width, int _height, Color _color)
 
 	// This object owns the bitmap.
 	mOwnsBitmap = true;
-
-	// Set the current bitmap to the new bitmap.
-	al_set_target_bitmap(mpBitmap);
-
-	// Clear the bitmap to the color.
-	al_clear_to_color(al_map_rgb(_color.getR(), _color.getG(), _color.getB()));
-
-	// Reassign the temporay bitmap to the current bitmap.
-	al_set_target_bitmap(tempBitmap);
 
 	return;
 }

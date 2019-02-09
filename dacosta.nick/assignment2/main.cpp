@@ -88,11 +88,11 @@ int main()
 	// Start tracking the initialization.
 	pPerformanceTracker->startTracking(INIT_TRACKER_NAME);
 
-	// Create graphics system with 800x600 display.
-	GraphicsSystem graphicsSystem = GraphicsSystem();
+	// Create graphics system.
+	GraphicsSystem* pGraphicsSystem = new GraphicsSystem();
 
-	// Initalize the graphics system.
-	graphicsSystem.initialize(DISPLAY_WIDTH, DISPLAY_HEIGHT);
+	// Initalize the graphics system with a given dimension.
+	pGraphicsSystem->initialize(DISPLAY_WIDTH, DISPLAY_HEIGHT);
 
 	// Stop tracking initialization.
 	pPerformanceTracker->stopTracking(INIT_TRACKER_NAME);
@@ -100,57 +100,51 @@ int main()
 	// Start tracking drawing.
 	pPerformanceTracker->startTracking(DRAW_TRACKER_NAME);
 
-	// TODO: Change to pointer.
 	// Create steps graphics buffer.
-	GraphicsBuffer stepsBuffer = GraphicsBuffer(ASSET_PATH, STEPS_BITMAP_FILENAME);
+	GraphicsBuffer* pStepsBuffer = new GraphicsBuffer(ASSET_PATH, STEPS_BITMAP_FILENAME);
 
-	// TODO: Change to pointer.
 	// Create smurfs graphics buffer.
-	GraphicsBuffer smurfsBuffer = GraphicsBuffer(ASSET_PATH, SMURF_SPRITE_FILENAME);
+	GraphicsBuffer* pSmurfsBuffer = new GraphicsBuffer(ASSET_PATH, SMURF_SPRITE_FILENAME);
 
-	// TODO: Change to pointer.
-	// Create red graphics buffer.
-	GraphicsBuffer redBuffer = GraphicsBuffer(DISPLAY_WIDTH, DISPLAY_HEIGHT, RED_COLOR);
+	// Create red graphics buffer from memory.
+	GraphicsBuffer* pRedBuffer = new GraphicsBuffer(DISPLAY_WIDTH, DISPLAY_HEIGHT);
 
-	// TODO: assert buffers. Assertions check it gets made. Don't use in build.
-	// Assert doesn't work in builds. No function calls.
-	// assert(stepsBuffer && smurfsBuffer && redBuffer);
+	// Assert buffers. Assertions check it gets made. Don't use in build.
+	assert(pStepsBuffer && pSmurfsBuffer && pRedBuffer);
 
-	// TODO: setBufferToColor(*pRedBuffer, RED);
+	// Set the given buffer to a given color..
+	pGraphicsSystem->setBufferColor(*pRedBuffer, RED_COLOR);
 
-	// TODO: Change to pointer.
 	// Create a new font.
-	Font courrierFont = Font(ASSET_PATH, FONT_FILENAME, FONT_SIZE);
+	Font* pCourrierFont = new Font(ASSET_PATH, FONT_FILENAME, FONT_SIZE);
 	
-	// TODO: Pass in pointer buffer. *redBuffer
 	// Draw text to the red buffer in black "Curse you Papa Smurf!".
-	graphicsSystem.writeText(redBuffer, TEXT_X, TEXT_Y, courrierFont, BLACK_COLOR, SMURF_MESSAGE);
+	pGraphicsSystem->writeText(*pRedBuffer, TEXT_X, TEXT_Y, *pCourrierFont, BLACK_COLOR, SMURF_MESSAGE);
 
 	// Save the red buffer to redbuffer.jpg.
-	graphicsSystem.saveBuffer(redBuffer, RED_BUFFER_FILENAME);
+	pGraphicsSystem->saveBuffer(*pRedBuffer, RED_BUFFER_FILENAME);
 
-	// Draw the red buffer.
-	graphicsSystem.draw(redBuffer);
-
-	// TODO: Include target buffer to draw to. Don't draw directly to back buffer.
 	// Draw the steps buffer on the red buffer scaled by 1/3.
-	graphicsSystem.draw(stepsBuffer, STEPS_BITMAP_SCALE);
+	pGraphicsSystem->draw(*pStepsBuffer, *pRedBuffer, BUFFER_CENTER, STEPS_BITMAP_SCALE);
+
+	// Draw the red buffer directly to the back buffer.
+	pGraphicsSystem->draw(*pRedBuffer);
 
 	// Create an array to store each sprite.
 	Sprite smurfSprites [SPRITESHEET_COLUMN_COUNT * SPRITESHEET_ROW_COUNT];
 
 	// Calculate the sprite width.
-	int spriteWidth = smurfsBuffer.getWidth() / SPRITESHEET_COLUMN_COUNT;
+	int spriteWidth = pSmurfsBuffer->getWidth() / SPRITESHEET_COLUMN_COUNT;
 
 	// Calculate the sprite height.
-	int spriteHeight = smurfsBuffer.getHeight() / SPRITESHEET_ROW_COUNT;
+	int spriteHeight = pSmurfsBuffer->getHeight() / SPRITESHEET_ROW_COUNT;
 
 	// Create a separate sprite for each one on the sheet and add it to an array.
 	for (int spriteRow = 0; spriteRow < SPRITESHEET_COLUMN_COUNT; spriteRow++)
 	{
 		for (int spriteColumn = 0; spriteColumn < SPRITESHEET_COLUMN_COUNT; spriteColumn++)
 		{
-			smurfSprites[spriteRow * SPRITESHEET_ROW_COUNT + spriteColumn] = Sprite(&smurfsBuffer, spriteWidth * spriteColumn, spriteHeight * spriteRow, spriteWidth, spriteHeight);
+			smurfSprites[spriteRow * SPRITESHEET_ROW_COUNT + spriteColumn] = Sprite(pSmurfsBuffer, spriteWidth * spriteColumn, spriteHeight * spriteRow, spriteWidth, spriteHeight);
 		}
 	}
 
@@ -158,20 +152,19 @@ int main()
 	for (int currentSprite = 0; currentSprite < SPRITESHEET_COLUMN_COUNT * SPRITESHEET_ROW_COUNT; currentSprite++)
 	{
 		// Calculate a random horizontal point within the buffer.
-		float destinationX = rand() % (graphicsSystem.getWidth() - spriteWidth) + 1;
+		float destinationX = rand() % (pGraphicsSystem->getWidth() - spriteWidth) + 1;
 		// Calculate a vertical point within the buffer.
-		float destinationY = rand() % (graphicsSystem.getHeight() - spriteHeight) + 1;
+		float destinationY = rand() % (pGraphicsSystem->getHeight() - spriteHeight) + 1;
 
 		// Draw the sprite on the buffer.
-		graphicsSystem.draw(smurfSprites[currentSprite], destinationX, destinationY);
+		pGraphicsSystem->draw(smurfSprites[currentSprite], destinationX, destinationY);
 	}
 
-	// TODO: Change to pointer buffer.
 	// Save the back buffer to backbuffer.jpg.
-	graphicsSystem.saveBuffer(graphicsSystem.getBackBuffer(), BACK_BUFFER_FILENMAE);
+	pGraphicsSystem->saveBuffer(pGraphicsSystem->getBackBuffer(), BACK_BUFFER_FILENMAE);
 
 	// Update the display.
-	graphicsSystem.updateDisplay();
+	pGraphicsSystem->updateDisplay();
 
 	// Stop tracking drawing.
 	pPerformanceTracker->stopTracking(DRAW_TRACKER_NAME);
@@ -192,7 +185,7 @@ int main()
 	// TODO: Move the GraphicsSystem destructor.
 	// NOTE: Not working from destructor because graphicsSystem doesn't go out of scope. Change graphicsSystem to a pointer?
 	// Clean up the system.
-	graphicsSystem.cleanUp();
+	pGraphicsSystem->cleanUp();
 
 	/****************************
 		Report elapsed times.
@@ -201,9 +194,23 @@ int main()
 	std::cout << "Time to Draw:" << pPerformanceTracker->getElapsedTime(DRAW_TRACKER_NAME) << " ms" << std::endl;
 	std::cout << "Time spent waiting:" << pPerformanceTracker->getElapsedTime(WAIT_TRACKER_NAME) << " ms" << std::endl;
 
-	// Delete pTimer and pPerformanceTracker to free up memory.
+	// Delete all the pointers to free memory.
 	delete pTimer;
 	delete pPerformanceTracker;
+	delete pGraphicsSystem;
+	delete pRedBuffer;
+	delete pSmurfsBuffer;
+	delete pStepsBuffer;
+	delete pCourrierFont;
+
+	// Make sure the pointers are nulled.
+	pTimer = nullptr;
+	pPerformanceTracker = nullptr;
+	pGraphicsSystem = nullptr;
+	pRedBuffer = nullptr;
+	pStepsBuffer = nullptr;
+	pSmurfsBuffer = nullptr;
+	pCourrierFont = nullptr;
 
 	MemoryTracker::getInstance()->reportAllocations(std::cout);
 	system("pause");
